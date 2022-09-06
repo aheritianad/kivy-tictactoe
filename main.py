@@ -21,8 +21,10 @@ class TicTacToeLayout(Widget):
             exec(
                 f"self.ids.bt{row}{col}.text = self.symbols[0] if self.game.val == -1 else self.symbols[1]")
             self.ids.textup.text = f"{self.game.whose_turn()}'s turn"
+        self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
         if self.game.end:
-            self.ids.textup.text = f"{self.game.winner} wins. Restart?" if self.game.winner is not None else "Draw! Restart?"
+            self.ids.textup.text = f"{self.game.winner} wins." if self.game.winner is not None else "Draw!"
+            self.ids.restartBtn.text = "Restart?"
 
     def entered_name(self, player_n):
         exec(
@@ -54,5 +56,4 @@ class TicTacToeAPP(App):
 
 
 if __name__ == "__main__":
-
     TicTacToeAPP().run()

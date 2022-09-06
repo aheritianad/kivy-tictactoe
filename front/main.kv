@@ -37,13 +37,32 @@
                     hint_text:"O"
                     font_size: 30
                     on_text_validate: root.entered_symbol(2)
-        Button:
-            multiline: False
-            id: textup
-            halign: "center"
-            font_size: 65
+        GridLayout:
+            cols: 3
+            rows: 1
             size_hint: (1,.15)
-            on_press: root.restart()
+            Label:
+                id: numEmpty
+                background_color: (0.0, 0.0, 0.0, 1.0)
+                color:"white"
+                halign: "left"
+                size_hint: (.2,.15)
+            Label:
+                color:"white"
+                background_color: (0.0, 0.0, 0.0, 1.0)
+                multiline: False
+                id: textup
+                halign: "center"
+                font_size: 65
+                size_hint: (1,.15)
+            Button:
+                id: restartBtn
+                background_color: (0.0, 0.0, 0.0, 1.0)
+                color:"white"
+                halign: "center"
+                size_hint: (.2,.15)
+                on_press: root.restart()
+            
         GridLayout:
             cols: 3
             rows: 3
