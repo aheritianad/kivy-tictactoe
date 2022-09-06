@@ -1,0 +1,96 @@
+<TicTacToeLayout>
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        GridLayout:
+            cols: 2
+            size_hint: (1,.05)
+            GridLayout:
+                cols: 2
+                TextInput:
+                    id: player1
+                    multiline: False
+                    hint_text:"Player1's name"
+                    font_size: 30
+                    on_text_validate: root.entered_name(1)
+                TextInput:
+                    id: symbol1
+                    size_hint: .3,1
+                    multiline: False
+                    hint_text:"X"
+                    halign: "center"
+                    font_size: 30
+                    on_text_validate: root.entered_symbol(1)
+            GridLayout:
+                cols: 2
+                TextInput:
+                    id: player2
+                    multiline: False
+                    hint_text:"Player2's name"
+                    font_size: 30
+                    on_text_validate: root.entered_name(2)
+                TextInput:
+                    id: symbol2
+                    size_hint: .3,1
+                    multiline: False
+                    halign: "center"
+                    hint_text:"O"
+                    font_size: 30
+                    on_text_validate: root.entered_symbol(2)
+        Label:
+            multiline: False
+            id: textup
+            halign: "center"
+            font_size: 65
+            size_hint: (1,.15)
+
+        GridLayout:
+            cols: 3
+            rows: 3
+            Button:
+                id: bt00
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(0,0)
+            Button:
+                id: bt01
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(0,1)
+            Button:
+                id: bt02
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(0,2)
+
+            Button:
+                id: bt10
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(1,0)
+            Button:
+                id: bt11
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(1,1)
+            Button:
+                id: bt12
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(1,2)
+
+            Button:
+                id: bt20
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(2,0)
+            Button:
+                id: bt21
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(2,1)
+            Button:
+                id: bt22
+                size_hint: (.2, .2)
+                font_size: 90
+                on_press: root.play(2,2)
