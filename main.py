@@ -6,7 +6,7 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 Builder.load_file("./front/main.kv")
-Window.size = (500, 700)
+# Window.size = (500, 700)
 
 
 class TicTacToeLayout(Widget):
@@ -22,7 +22,7 @@ class TicTacToeLayout(Widget):
                 f"self.ids.bt{row}{col}.text = self.symbols[0] if self.game.val == -1 else self.symbols[1]")
             self.ids.textup.text = f"{self.game.whose_turn()}'s turn"
         if self.game.end:
-            self.ids.textup.text = f"{self.game.winner} wins" if self.game.winner is not None else "Draw"
+            self.ids.textup.text = f"{self.game.winner} wins. Restart?" if self.game.winner is not None else "Draw! Restart?"
 
     def entered_name(self, player_n):
         exec(
@@ -38,10 +38,19 @@ class TicTacToeLayout(Widget):
         exec(
             f"self.symbols[player_n - 1] = self.ids.symbol{player_n}.text if self.ids.symbol{player_n}.text != '' else 'X' if player_n == 1 else 'O'")
 
+    def restart(self):
+        if self.game.end:
+            App.get_running_app().restart()
+
 
 class TicTacToeAPP(App):
     def build(self):
         return TicTacToeLayout()
+
+    def restart(self):
+        self.root.clear_widgets()
+        self.stop()
+        return TicTacToeAPP().run()
 
 
 if __name__ == "__main__":

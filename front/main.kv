@@ -37,13 +37,13 @@
                     hint_text:"O"
                     font_size: 30
                     on_text_validate: root.entered_symbol(2)
-        Label:
+        Button:
             multiline: False
             id: textup
             halign: "center"
             font_size: 65
             size_hint: (1,.15)
-
+            on_press: root.restart()
         GridLayout:
             cols: 3
             rows: 3
