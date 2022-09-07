@@ -24,7 +24,6 @@ class TicTacToeLayout(Widget):
         self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
         if self.game.end:
             self.ids.textup.text = f"{self.game.winner} wins." if self.game.winner is not None else "Draw!"
-            self.ids.restartBtn.text = "Restart?"
 
     def entered_name(self, player_n):
         exec(
@@ -41,8 +40,8 @@ class TicTacToeLayout(Widget):
             f"self.symbols[player_n - 1] = self.ids.symbol{player_n}.text if self.ids.symbol{player_n}.text != '' else 'X' if player_n == 1 else 'O'")
 
     def restart(self):
-        if self.game.end:
-            App.get_running_app().restart()
+        # if self.game.end:
+        App.get_running_app().restart()
 
 
 class TicTacToeAPP(App):
