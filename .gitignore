@@ -1,4 +1,6 @@
 */__pycache__/*
-.kivy/*
-.buildozer/*
+.kivy
+.buildozer
 buildozer.spec
+bin
+.DS_Store
