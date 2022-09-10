@@ -19,17 +19,17 @@ class TicTacToeLayout(Widget):
 
     def play(self, row, col):
         if self.game.play(row, col):
-            exec(
-                f"self.ids.bt{row}{col}.text = self.symbols[0] if self.game.val == -1 else self.symbols[1]")
+            symb = self.symbols[0] if self.game.val == -1 else self.symbols[1]
+            self.ids[f"bt{row}{col}"].text = symb
             hand = self.players_name[self.game.whose_turn()]
             self.ids.textup.text = f"{hand}'s turn"
         self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
         if self.game.end:
             winner = self.players_name[self.game.winner]
-            self.ids.textup.text = f"{winner} wins." if winner is not None else "Draw!"
+            self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
     def entered_name(self, player_n):
-        new_name = eval(f"self.ids.player{player_n}.text")
+        new_name = self.ids[f"player{player_n}"].text
         self.players_name[int(
             player_n) - 1] = new_name if new_name != '' else f"player{player_n}"
         if not self.game.end:
@@ -37,17 +37,15 @@ class TicTacToeLayout(Widget):
             self.ids.textup.text = f"{hand}'s turn"
 
     def entered_symbol(self, player_n):
-        new_symbol = eval(f"self.ids.symbol{player_n}.text")
+        new_symbol = self.ids[f"symbol{player_n}"].text
         player_val = 1 if player_n == 1 else -1
         for row in range(3):
             for col in range(3):
                 if self.game.board[row][col] == player_val:
                     if new_symbol != '':
-                        exec(f"self.ids.bt{row}{col}.text = new_symbol")
-                    elif player_n == 1:
-                        exec(f"self.ids.bt{row}{col}.text = 'X'")
+                        self.ids[f"bt{row}{col}"].text = new_symbol
                     else:
-                        exec(f"self.ids.bt{row}{col}.text = 'O'")
+                        self.ids[f"bt{row}{col}"].text = 'X' if player_n == 1 else 'O'
         if new_symbol != '':
             self.symbols[player_n - 1] = new_symbol
         else:
@@ -56,10 +54,9 @@ class TicTacToeLayout(Widget):
     def restart(self):
         for row in range(3):
             for col in range(3):
-                exec(
-                    f"self.ids.bt{row}{col}.text = ''")
+                self.ids[f"bt{row}{col}"].text = ''
         self.game = TicTacToe()
-        self.ids.textup.text = f"Start"
+        self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ''
 
 
