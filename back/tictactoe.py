@@ -9,7 +9,6 @@ Created on Mon Sep  5 18:09:47 2022
 
 class TicTacToe:
     def __init__(self) -> None:
-        self.players = ["player1", "player2"]
         self.val = 1
         self.board = [[0]*3 for _ in range(3)]
         self.number_of_empty = 9
@@ -17,11 +16,8 @@ class TicTacToe:
         self.end = False
         self.winner = None
 
-    def setplayers_name(self, name, player_n):
-        self.players[player_n-1] = name
-
     def whose_turn(self):
-        return self.players[0] if self.val == 1 else self.players[1]
+        return 0 if self.val == 1 else 1
 
     def check(self, row, col):
         horizontal = abs(self.board[row][0] +
