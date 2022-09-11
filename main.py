@@ -15,6 +15,23 @@ class TicTacToeLayout(Widget):
         self.symbols = ["X", "O"]
         self.players_name = ["player1", "player2"]
 
+    def color_board(self, i):
+        if i < 3:  # row
+            row = i
+            for col in range(3):
+                self.ids[f"bt{row}{col}"].background_color = (0, 1, 0, 1)
+        elif i < 6:  # col
+            col = i - 3
+            for row in range(3):
+                self.ids[f"bt{row}{col}"].background_color = (0, 1, 0, 1)
+        elif i == 6:  # diag
+            for row_col in range(3):
+                self.ids[f"bt{row_col}{row_col}"].background_color = (
+                    0, 1, 0, 1)
+        elif i == 7:  # antidiag
+            for row in range(3):
+                self.ids[f"bt{row}{2-row}"].background_color = (0, 1, 0, 1)
+
     def play(self, row, col):
         if self.game.play(row, col):
             symb = self.symbols[0] if self.game.val == -1 else self.symbols[1]
@@ -23,7 +40,13 @@ class TicTacToeLayout(Widget):
             self.ids.textup.text = f"{hand}'s turn"
         self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
         if self.game.end:
-            winner = self.players_name[self.game.winner] if self.game.winner is not None else None
+            if self.game.winner is not None:
+                winner = self.players_name[self.game.winner]
+                for i, val in enumerate(self.game.state):
+                    if not val == 0:
+                        self.color_board(i)
+            else:
+                winner = None
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
     def entered_name(self, player_n):
@@ -53,6 +76,7 @@ class TicTacToeLayout(Widget):
         for row in range(3):
             for col in range(3):
                 self.ids[f"bt{row}{col}"].text = ''
+                self.ids[f"bt{row}{col}"].background_color = (1, 1, 1, 1)
         self.game = TicTacToe()
         self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ''
