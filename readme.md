@@ -20,7 +20,7 @@ source .venv/bin/activate
 ```
 And now, install the requirements by running 
 ```bash
-pip3 install -r requirements
+pip3 install -r requirements.txt
 ```
 
 ## Run the game
