@@ -4,3 +4,4 @@
 buildozer.spec
 bin
 .DS_Store
+.venv
