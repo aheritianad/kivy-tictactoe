@@ -13,7 +13,7 @@ class TicTacToeLayout(Widget):
     def __init__(self, ** kwargs):
         super().__init__(**kwargs)
         self.game = TicTacToe()
-        self.ids.textup.text = f"Set names"
+        self.ids.textup.text = "Set names"
         self.symbols = ["X", "O"]
         self.players_name = ["player1", "player2"]
 
@@ -25,7 +25,7 @@ class TicTacToeLayout(Widget):
             self.ids.textup.text = f"{hand}'s turn"
         self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
         if self.game.end:
-            winner = self.players_name[self.game.winner]
+            winner = self.players_name[self.game.winner] if self.game.winner is not None else None
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
     def entered_name(self, player_n):
