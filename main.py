@@ -16,21 +16,21 @@ class TicTacToeLayout(Widget):
         self.players_name = ["player1", "player2"]
 
     def color_board(self, i):
+        color = (0, 1, 0, 1)
         if i < 3:  # row
             row = i
             for col in range(3):
-                self.ids[f"bt{row}{col}"].background_color = (0, 1, 0, 1)
+                self.ids[f"bt{row}{col}"].background_color = color
         elif i < 6:  # col
             col = i - 3
             for row in range(3):
-                self.ids[f"bt{row}{col}"].background_color = (0, 1, 0, 1)
+                self.ids[f"bt{row}{col}"].background_color = color
         elif i == 6:  # diag
             for row_col in range(3):
-                self.ids[f"bt{row_col}{row_col}"].background_color = (
-                    0, 1, 0, 1)
+                self.ids[f"bt{row_col}{row_col}"].background_color = color
         elif i == 7:  # antidiag
             for row in range(3):
-                self.ids[f"bt{row}{2-row}"].background_color = (0, 1, 0, 1)
+                self.ids[f"bt{row}{2-row}"].background_color = color
 
     def play(self, row, col):
         if self.game.play(row, col):
