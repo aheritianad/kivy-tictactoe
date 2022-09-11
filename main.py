@@ -3,10 +3,8 @@ from back.tictactoe import TicTacToe
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-from kivy.core.window import Window
 
 Builder.load_file("./front/main.kv")
-# Window.size = (500, 700)
 
 
 class TicTacToeLayout(Widget):
