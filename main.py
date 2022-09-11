@@ -38,7 +38,11 @@ class TicTacToeLayout(Widget):
             self.ids[f"bt{row}{col}"].text = symb
             hand = self.players_name[self.game.whose_turn()]
             self.ids.textup.text = f"{hand}'s turn"
+
         self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
+        color = self.game.number_of_empty/9
+        self.ids.numEmpty.background_color = (color, color, color, 1)
+
         if self.game.end:
             if self.game.winner is not None:
                 winner = self.players_name[self.game.winner]
@@ -80,6 +84,7 @@ class TicTacToeLayout(Widget):
         self.game = TicTacToe()
         self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ''
+        self.ids.numEmpty.background_color = (0, 0, 0, 1)
 
 
 class TicTacToeAPP(App):
