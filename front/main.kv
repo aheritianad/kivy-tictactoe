@@ -15,6 +15,9 @@
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
+        MDTopAppBar:
+            title: "Tic Tac Toe Game"
+        
         GridLayout:
             cols: 2
             size_hint: (1,.05)
@@ -60,12 +63,13 @@
                 color:"blue"
                 halign: "center"
                 size_hint: (.2,.15)
-            Label:
+            BackgroundLabel:
                 color:"white"
+                background_color: (0.0, 0.0, 0.0, 1.0)
                 multiline: True
                 id: textup
                 halign: "center"
-                font_size: 65
+                font_size: 40
                 size_hint: (.8,.15)
             Button:
                 ripple_color: 0, 0, 0, .2

@@ -1,6 +1,6 @@
 from back.tictactoe import TicTacToe
 
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
@@ -87,7 +87,7 @@ class TicTacToeLayout(Widget):
         self.ids.numEmpty.background_color = (0, 0, 0, 1)
 
 
-class TicTacToeAPP(App):
+class TicTacToeAPP(MDApp):
     def build(self):
         return TicTacToeLayout()
 
