@@ -54,7 +54,10 @@ class TicTacToeLayout(Widget):
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
     def entered_name(self, player_n):
-        new_name = self.ids[f"player{player_n}"].text
+        max_name_length = 20
+        new_name = self.ids[f"player{player_n}"].text[:max_name_length].replace(
+            ' ', '')
+        self.ids[f"player{player_n}"].text = new_name
         self.players_name[int(
             player_n) - 1] = new_name if new_name != '' else f"player{player_n}"
         if not self.game.end:
