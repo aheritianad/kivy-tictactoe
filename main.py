@@ -39,9 +39,11 @@ class TicTacToeLayout(Widget):
             hand = self.players_name[self.game.whose_turn()]
             self.ids.textup.text = f"{hand}'s turn"
 
-        self.ids.numEmpty.text = f"Empty : {self.game.number_of_empty}"
-        color = self.game.number_of_empty/9
+        num_empty = self.game.number_of_empty
+        self.ids.numEmpty.text = f"Empty : {num_empty}" if num_empty else "Game over"
+        color = num_empty/9
         self.ids.numEmpty.background_color = (color, color, color, 1)
+        self.ids.numEmpty.color = (1-color, 0, color*(1-color), 1)
 
         if self.game.end:
             if self.game.winner is not None:
