@@ -55,6 +55,10 @@ class TicTacToeLayout(Widget):
                 winner = None
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
+            self.add_stats(winner=winner)
+    def add_stats(self, winner):
+        with open("data/stats/stats.csv",'a') as stats:
+            stats.write(f"{self.players_name[0]}, {self.players_name[1]}, {winner}\n")
     def entered_name(self, player_n):
         max_name_length = 20
         new_name = self.ids[f"player{player_n}"].text[:max_name_length].replace(
