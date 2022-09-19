@@ -48,7 +48,7 @@ class TicTacToeLayout(Widget):
         if self.game.end:
             if self.game.winner is not None:
                 winner = self.players_name[self.game.winner]
-                for i, val in enumerate(self.game.state):
+                for i, val in enumerate(self.game.color):
                     if not val == 0:
                         self.color_board(i)
             else:
@@ -93,7 +93,7 @@ class TicTacToeLayout(Widget):
             for col in range(3):
                 self.ids[f"bt{row}{col}"].text = ''
                 self.ids[f"bt{row}{col}"].background_color = (1, 1, 1, 1)
-        self.game = TicTacToe()
+        self.game.reset()
         self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ''
         self.ids.numEmpty.background_color = (0, 0, 0, 1)

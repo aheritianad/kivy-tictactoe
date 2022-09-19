@@ -12,7 +12,7 @@ class TicTacToe:
         self.val = 1
         self.board = [[0]*3 for _ in range(3)]
         self.number_of_empty = 9
-        self.state = [0]*8
+        self.color = [0]*8
         self.end = False
         self.winner = None
 
@@ -34,22 +34,22 @@ class TicTacToe:
             self.end = True
             self.winner = None
         if horizontal:
-            self.state[row] = self.val
+            self.color[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
             reward += 1
         if vertical:
-            self.state[3+col] = self.val
+            self.color[3+col] = self.val
             self.end = True
             self.winner = self.whose_turn()
             reward += 1
         if diagonal:
-            self.state[6] = self.val
+            self.color[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
             reward += 1
         if antidiagonal:
-            self.state[7] = self.val
+            self.color[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
             reward += 1
@@ -69,3 +69,10 @@ class TicTacToe:
         # switch player
         self.val *= -1
         return True, reward
+
+    def reset(self):
+        self.board = [[0]*3 for _ in range(3)]
+        self.number_of_empty = 9
+        self.color = [0]*8
+        self.end = False
+        self.winner = None
