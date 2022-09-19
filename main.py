@@ -33,7 +33,7 @@ class TicTacToeLayout(Widget):
                 self.ids[f"bt{row}{2-row}"].background_color = color
 
     def play(self, row, col):
-        if self.game.play(row, col):
+        if self.game.play(row, col)[0]:
             symb = self.symbols[0] if self.game.val == -1 else self.symbols[1]
             self.ids[f"bt{row}{col}"].text = symb
             hand = self.players_name[self.game.whose_turn()]
@@ -56,9 +56,12 @@ class TicTacToeLayout(Widget):
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
             self.add_stats(winner=winner)
+
     def add_stats(self, winner):
-        with open("data/stats/stats.csv",'a') as stats:
-            stats.write(f"{self.players_name[0]}, {self.players_name[1]}, {winner}\n")
+        with open("data/stats/stats.csv", 'a') as stats:
+            stats.write(
+                f"{self.players_name[0]}, {self.players_name[1]}, {winner}\n")
+
     def entered_name(self, player_n):
         max_name_length = 20
         new_name = self.ids[f"player{player_n}"].text[:max_name_length].replace(

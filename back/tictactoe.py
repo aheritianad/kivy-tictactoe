@@ -19,7 +19,7 @@ class TicTacToe:
     def whose_turn(self):
         return 0 if self.val == 1 else 1
 
-    def check(self, row, col):
+    def get_reward(self, row, col):
         horizontal = abs(self.board[row][0] +
                          self.board[row][1] + self.board[row][2]) == 3
         vertical = abs(self.board[0][col] + self.board[1]
@@ -28,6 +28,8 @@ class TicTacToe:
                        [1] + self.board[2][2]) == 3
         antidiagonal = abs(self.board[0][2] +
                            self.board[1][1] + self.board[2][0]) == 3
+
+        reward = 0
         if self.number_of_empty == 0:
             self.end = True
             self.winner = None
@@ -35,30 +37,35 @@ class TicTacToe:
             self.state[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
+            reward += 1
         if vertical:
             self.state[3+col] = self.val
             self.end = True
             self.winner = self.whose_turn()
+            reward += 1
         if diagonal:
             self.state[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
+            reward += 1
         if antidiagonal:
             self.state[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
+            reward += 1
+        return reward
 
     def play(self, row, col):
         if self.end:
-            return False
+            return False, -2  # loose
         if not self.board[row][col] == 0:
-            return False
+            return False, -2  # penalize on typing on filled slot
 
         self.board[row][col] = self.val
         self.number_of_empty -= 1
 
-        self.check(row, col)
+        reward = self.get_reward(row, col)
 
         # switch player
         self.val *= -1
-        return True
+        return True, reward
