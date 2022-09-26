@@ -76,3 +76,7 @@ class TicTacToe:
         self.color = [0]*8
         self.end = False
         self.winner = None
+
+    @property
+    def hashed_state(self):
+        return "".join("".join(map(lambda x: str(x % 3), row)) for row in self.board)
