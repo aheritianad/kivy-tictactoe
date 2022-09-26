@@ -17,6 +17,7 @@ class TicTacToe:
         self.winner = None
         self.actions = {0: (0, 0), 1: (0, 1), 2: (0, 2), 3: (1, 0), 4: (
             1, 1), 5: (1, 2), 6: (2, 0), 7: (2, 1), 8: (2, 2)}
+        self.num_actions = 9
 
     def whose_turn(self):
         return 0 if self.val == 1 else 1
@@ -59,18 +60,20 @@ class TicTacToe:
 
     def play(self, row, col):
         if self.end:
-            return False, -2  # loose
+            return False, -1  # loose
         if not self.board[row][col] == 0:
             return False, -2  # penalize on typing on filled slot
 
         self.board[row][col] = self.val
         self.number_of_empty -= 1
-
         reward = self.get_reward(row, col)
-
         # switch player
         self.val *= -1
         return True, reward
+
+    @property
+    def hashed_state(self):
+        return "".join("".join(map(lambda x: str(x % 3), row)) for row in self.board)
 
     def reset(self):
         self.board = [[0]*3 for _ in range(3)]
@@ -78,7 +81,8 @@ class TicTacToe:
         self.color = [0]*8
         self.end = False
         self.winner = None
+        return "0"*9  # hashed_state for empty
 
-    @property
-    def hashed_state(self):
-        return "".join("".join(map(lambda x: str(x % 3), row)) for row in self.board)
+    def step(self, action):
+        switch, reward = self.play(*self.actions[action])
+        return self.hashed_state, reward, self.end, switch
