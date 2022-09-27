@@ -12,7 +12,8 @@ def return_probabilities(state, qvalue_state, kind):
     logits = qvalue_state[index_state == 0]
     if kind == "greedy":
         p = np.zeros_like(logits)
-        p[logits.argmax()] = 1
+        p[np.where(logits - logits.max() == 0)] = 1 # Give the same probability when there are more than one maximum
+        p = p.mean()
     elif kind == "softmax":
         p = softmax(logits)
     elif kind == "random":
