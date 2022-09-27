@@ -102,6 +102,8 @@ class TicTacToeLayout(Widget):
             self._cpu[player_n - 1] = True
             if self.game.whose_turn() == player_n-1:
                 self.auto_play()
+        else:
+            self._cpu[player_n - 1] = False
 
         if not self.game.end:
             hand = self.players_name[self.game.whose_turn()]
