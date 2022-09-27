@@ -76,6 +76,7 @@ class TicTacToe:
         return "".join("".join(map(lambda x: str(x % 3), row)) for row in self.board)
 
     def reset(self):
+        self.val = 1
         self.board = [[0]*3 for _ in range(3)]
         self.number_of_empty = 9
         self.color = [0]*8
