@@ -26,6 +26,12 @@ First of all, you need to download and install it. It runs on `python3`.
 git clone https://github.com/aheritianad/kivy-tictactoe.git
 ```
 
+#### Enter in the directory
+
+```bash
+cd kivy-tictactoe
+```
+
 #### **[OPTIONAL]** Create a virtual environment
 
 Do the following if you want to run it in a virtual environment.
