@@ -49,27 +49,27 @@ class TicTacToe:
             self.color[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 5
+            reward += 2
         if vertical:
             self.color[3 + col] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 5
+            reward += 2
         if diagonal:
             self.color[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 5
+            reward += 2
         if antidiagonal:
             self.color[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 5
+            reward += 2
         return reward
 
     def play(self, row, col):
         if self.end:
-            return False, -1  # loose
+            return False, -5  # loose
         if not self.board[row][col] == 0:
             return False, -2  # penalize on typing on filled slot
 
