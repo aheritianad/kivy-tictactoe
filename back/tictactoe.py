@@ -9,6 +9,7 @@ Created on Mon Sep  5 18:09:47 2022
 
 class TicTacToe:
     def __init__(self) -> None:
+        """Generate a Tic Tac Toe Game environment"""
         self.val = 1
         self.board = [[0] * 3 for _ in range(3)]
         self.number_of_empty = 9
@@ -29,9 +30,23 @@ class TicTacToe:
         self.num_actions = 9
 
     def whose_turn(self):
+        """Ask the environment the index of current player
+
+        Returns:
+            int: index of current player
+        """
         return 0 if self.val == 1 else 1
 
     def get_reward(self, row, col):
+        """Check wether the game is ended if current player play at the given position and return the respected reward.
+
+        Args:
+            row (int): row where player plays
+            col (int): column where player plays
+
+        Returns:
+            int: reward obtain by playing at the given position
+        """
         horizontal = (
             abs(self.board[row][0] + self.board[row][1] + self.board[row][2]) == 3
         )
@@ -49,29 +64,38 @@ class TicTacToe:
             self.color[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if vertical:
             self.color[3 + col] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if diagonal:
             self.color[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if antidiagonal:
             self.color[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         return reward
 
     def play(self, row, col):
+        """Current player plays at the given row and column.
+
+        Args:
+            row (int): row where player want to play
+            col (int): column where player want to play
+
+        Returns:
+            tuple[bool, int]: indication wether player was able to play at the given position, reward obtain by trying to play on the position
+        """
         if self.end:
-            return False, -5  # loose
+            return False, -2  # loose
         if not self.board[row][col] == 0:
-            return False, -2  # penalize on typing on filled slot
+            return False, -1  # penalize on typing on filled slot
 
         self.board[row][col] = self.val
         self.number_of_empty -= 1
@@ -82,17 +106,45 @@ class TicTacToe:
 
     @property
     def hashed_state(self):
+        """generate a hashed string for current state.
+
+        Returns:
+            str : hash for current state
+        """
         return "".join("".join(map(lambda x: str(x % 3), row)) for row in self.board)
 
     def reset(self):
+        """Reset environement:
+        - Set hand to plalyer 1
+        - Clear and uncolor the board
+
+        Returns:
+            str : empty state
+        """
         self.val = 1
         self.board = [[0] * 3 for _ in range(3)]
         self.number_of_empty = 9
         self.color = [0] * 8
         self.end = False
         self.winner = None
-        return "0" * 9  # hashed_state for empty
+        return self.hashed_state
 
     def step(self, action):
+        """Make a step in the environement by performing an action.
+        Actions are represented in a index form (from 0 to 8), where
+        row 0, col 0 : action 0
+        row 0, col 1 : action 1
+        row 0, col 2 : action 2
+        row 1, col 0 : action 3
+        ...
+        row 2, col 2 : action 8
+
+        Args:
+            action (int): index of the action to perform.
+
+
+        Returns:
+            tuple[str, int, bool, bool]: hashed of next state, reward from the action, indication if the game is done, indication if the player will be switched
+        """
         switch, reward = self.play(*self.actions[action])
         return self.hashed_state, reward, self.end, switch
