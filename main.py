@@ -1,4 +1,8 @@
 from back.tictactoe import TicTacToe
+from back.utils import read_json_policy, return_probabilities
+
+import numpy as np
+from time import sleep
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -14,6 +18,8 @@ class TicTacToeLayout(Widget):
         self.ids.textup.text = "Set names"
         self.symbols = ["X", "O"]
         self.players_name = ["player1", "player2"]
+        self._policy = [None, None]
+        self._cpu = [False, False]
 
     def color_board(self, i):
         color = (0, 1, 0, 1)
@@ -57,6 +63,19 @@ class TicTacToeLayout(Widget):
 
             self.add_stats(winner=winner)
 
+        if self._cpu[self.game.whose_turn()] and not self.game.end:
+            self.auto_play()
+
+    def auto_play(self):
+        hash = self.game.hashed_state
+        p = return_probabilities(hash, np.zeros(
+            self.game.num_actions), kind="random")
+        probs = self._policy[self.game.whose_turn()].get(hash, p)
+        action = np.random.choice(self.game.num_actions, p=probs)
+        row, col = self.game.actions[action]
+        # sleep(5)
+        self.play(row, col)
+
     def add_stats(self, winner):
         with open("data/stats/stats.csv", 'a') as stats:
             stats.write(
@@ -66,9 +85,24 @@ class TicTacToeLayout(Widget):
         max_name_length = 20
         new_name = self.ids[f"player{player_n}"].text[:max_name_length].replace(
             ' ', '')
+        name = new_name[:-1].lower()
+        if name == "cpu":
+            try:
+                lvl = int(new_name[-1])
+            except ValueError:
+                lvl = 0
         self.ids[f"player{player_n}"].text = new_name
         self.players_name[int(
             player_n) - 1] = new_name if new_name != '' else f"player{player_n}"
+        if name == "cpu" and lvl in (1, 2, 3):
+            level = {1: "easy", 2: "medium", 3: "hard"}[lvl]
+            player = "" if level == "easy" else f"_player{player_n}"
+            self._policy[player_n - 1] = read_json_policy(
+                f"./back/json_agents/{level}{player}.json")
+            self._cpu[player_n - 1] = True
+            if self.game.whose_turn() == player_n-1:
+                self.auto_play()
+
         if not self.game.end:
             hand = self.players_name[self.game.whose_turn()]
             self.ids.textup.text = f"{hand}'s turn"
@@ -97,6 +131,8 @@ class TicTacToeLayout(Widget):
         self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ''
         self.ids.numEmpty.background_color = (0, 0, 0, 1)
+        if self._cpu[self.game.whose_turn()]:
+            self.auto_play()
 
 
 class TicTacToeAPP(MDApp):
