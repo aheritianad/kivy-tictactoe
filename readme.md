@@ -1,24 +1,28 @@
-# TicTacToe Game
+# **<font color="red">Tic</font><font color="green">Tac</font><font color="blue">Toe</font> Game**
 
-## What is this?
+## **What is this?**
 
 This is a draft of a kivy app which can do basics tictactoe game. User can choose to play against cpu.
 
-## Why do I write this?
+## **<font color="red">WARNING!!!</font>**
+
+The iterface is not nice. Yeah! but it can do the job.
+
+## **Why do I write this?**
 
 - Mainly for fun
 - To apply my understanding of kivy and Q-learning free tabular
 
-## Next plan ?
+## **Next plan ?**
 
-- ~~My next plan is to implement a reinforcement learning model from scratch to allow cpu to play on its own.~~
-- It seems that the model plays offensive only. I will train it to play against myself after against itself when I have time for that.
+- [x] ~~My next plan is to implement a reinforcement learning model from scratch to allow cpu to play on its own.~~
+- [ ] It seems that the model plays offensive only. I will train it to play against myself after against itself when I have time for that.
 
-## How to use it?
+## **How to use it?**
 
 First of all, you need to download and install it. It runs on `python3`.
 
-### Installation
+### **Installation**
 
 #### Clone this repository by running
 
@@ -54,7 +58,7 @@ source .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-### Run the game
+### **Run the game**
 
 #### Use the following command to run the game
 
