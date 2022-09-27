@@ -3,6 +3,7 @@ from back.utils import read_json_policy, return_probabilities
 
 import numpy as np
 from time import sleep
+from typing import *
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -23,7 +24,7 @@ class TicTacToeLayout(Widget):
         self._policy = [None, None]
         self._cpu = [False, False]
 
-    def color_board(self, i):
+    def color_board(self, i: int):
         """Coloring the coresponding winning boxes to be green
 
         Args:
@@ -45,7 +46,7 @@ class TicTacToeLayout(Widget):
             for row in range(3):
                 self.ids[f"bt{row}{2-row}"].background_color = color
 
-    def play(self, row, col):
+    def play(self, row: int, col: int):
         """Let current player to play at the given position if the move is allowed.
 
         Args:
@@ -88,7 +89,7 @@ class TicTacToeLayout(Widget):
         row, col = self.game.actions[action]
         self.play(row, col)
 
-    def add_stats(self, winner):
+    def add_stats(self, winner: str):
         """Add statistic in the stats data.
 
         Args:
@@ -97,7 +98,7 @@ class TicTacToeLayout(Widget):
         with open("data/stats/stats.csv", "a") as stats:
             stats.write(f"{self.players_name[0]}, {self.players_name[1]}, {winner}\n")
 
-    def entered_name(self, player_n):
+    def entered_name(self, player_n: int):
         """Set player's name from the interface
         If player's name is part of `cpu` players, it will load the corresponding policy.
 
