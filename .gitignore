@@ -7,3 +7,4 @@ bin
 .venv
 */*/stats.csv
 */*/*.json
+.vscode/settings.json
