@@ -6,6 +6,8 @@ Created on Mon Sep  5 18:09:47 2022
 @author: heritianadanielandriasolofo
 """
 
+import numpy as np
+
 
 class TicTacToe:
     def __init__(self) -> None:
@@ -86,3 +88,9 @@ class TicTacToe:
     def step(self, action):
         switch, reward = self.play(*self.actions[action])
         return self.hashed_state, reward, self.end, switch
+
+    def play_with_policy(self, policy):
+        probs = policy[self.hashed_state]
+        action = np.random.choice(self.num_actions, p=probs)
+        row, col = self.actions[action]
+        return self.play(row, col)
