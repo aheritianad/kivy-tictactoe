@@ -4,7 +4,7 @@ This is a draft of a kivy app which can do basics tictactoe game.
 
 # Next plan for upgrade
 
-My next plan is to implement a reinforcement learning model from scratch to allow cpu to play on its own.
+~~~My next plan is to implement a reinforcement learning model from scratch to allow cpu to play on its own.~~~ [✔️]
 
 ## Installation
 
