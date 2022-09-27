@@ -13,7 +13,7 @@ class Player:
     def act(self, state, eval = False):
         if state not in self.qfunction:
             self.qfunction[state] = np.zeros(self._num_actions)
-        Q_s = self.qfunction[state].copy()
+        Q_s = self.qfunction[state]
         if (eval or np.random.uniform() > self._epsilon) and np.any(Q_s - Q_s[0]):
             action = np.argmax(self.qfunction[state])
         else :
