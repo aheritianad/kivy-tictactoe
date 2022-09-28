@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import matplotlib.pyplot as plt
 from typing import *
 
 
@@ -72,3 +73,30 @@ def read_json_policy(json_policy_path: str):
     with open(json_policy_path, "r") as json_file:
         policy = json.load(json_file)
     return policy
+
+def visualize_rewards(episodes, all_rewards, num_eval_episodes, name1 = None, name2=None, from_index=0, end_index=-1):
+    if not name1:
+        name1 = "Player 1"
+    if not name2:
+        name2 = "Player 2"
+    plt.figure(figsize=(15, 6))
+    plt.title(f"Average rewards over {num_eval_episodes} episodes")
+    plt.xlabel('Number of training episodes')
+    plt.ylabel(f'Average rewards')
+    plt.plot(episodes[from_index:end_index], all_rewards[0][from_index:end_index], label=name1)
+    plt.plot(episodes[from_index:end_index], all_rewards[1][from_index:end_index], label=name2)
+    plt.legend()
+    plt.show()
+
+def visuzalize_winners(winners, name1 = None, name2=None, from_index=0, end_index=-1):
+    if not name1:
+        name1 = "Player 1"
+    if not name2:
+        name2 = "Player 2"
+    plt.title("Histogram of number of time Player's win.")
+    plt.figure(figsize=(15, 6))
+    plt.hist(winners[0][from_index:end_index], label=f"Draw")
+    plt.hist(winners[1][from_index:end_index], label=name1)
+    plt.hist(winners[2][from_index:end_index], label=name2)
+    plt.legend()
+    plt.show()
