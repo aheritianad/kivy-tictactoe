@@ -2,7 +2,6 @@ from back.tictactoe import TicTacToe
 from back.utils import read_json_policy, return_probabilities
 
 import numpy as np
-from time import sleep
 from typing import *
 
 from kivymd.app import MDApp
@@ -24,13 +23,29 @@ class TicTacToeLayout(Widget):
         self._policy = [None, None]
         self._cpu = [False, False]
 
+    @property
+    def game_over(self):
+        return self.game.end
+
+    @property
+    def hand(self):
+        return self.game.whose_turn()
+
+    @property
+    def hand_index(self):
+        return self.game.val
+
+    @property
+    def winner(self):
+        return self.game.winner
+
     def color_board(self, i: int):
         """Coloring the coresponding winning boxes to be green
 
         Args:
             i (int): index of winning boxes
         """
-        color = (0, 1, 0, 1)
+        color = (0, 1, 0, 1)  # Green
         if i < 3:  # row
             row = i
             for col in range(3):
@@ -54,9 +69,9 @@ class TicTacToeLayout(Widget):
             col (int): column where player want to play
         """
         if self.game.play(row, col)[0]:
-            symb = self.symbols[0] if self.game.val == -1 else self.symbols[1]
+            symb = self.symbols[0] if self.hand_index == -1 else self.symbols[1]
             self.ids[f"bt{row}{col}"].text = symb
-            hand = self.players_name[self.game.whose_turn()]
+            hand = self.players_name[self.hand]
             self.ids.textup.text = f"{hand}'s turn"
 
         num_empty = self.game.number_of_empty
@@ -65,9 +80,9 @@ class TicTacToeLayout(Widget):
         self.ids.numEmpty.background_color = (color, color, color, 1)
         self.ids.numEmpty.color = (1 - color, 0, color * (1 - color), 1)
 
-        if self.game.end:
-            if self.game.winner is not None:
-                winner = self.players_name[self.game.winner]
+        if self.game_over:
+            if self.winner is not None:
+                winner = self.players_name[self.winner]
                 for i, val in enumerate(self.game.color):
                     if not val == 0:
                         self.color_board(i)
@@ -75,18 +90,18 @@ class TicTacToeLayout(Widget):
                 winner = None
             self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
 
-            self.add_stats(winner=winner)
-
-        if self._cpu[self.game.whose_turn()] and not self.game.end:
+            # self.add_stats(winner=winner)
+        if self._cpu[self.hand] and not self.game_over:
             self.auto_play()
 
     def auto_play(self):
         """Ask cpu to play following its corresponding policy"""
         hash = self.game.hashed_state
         p = return_probabilities(hash, np.zeros(self.game.num_actions), kind="random")
-        probs = self._policy[self.game.whose_turn()].get(hash, p)
+        probs = self._policy[self.hand].get(hash, p)
         action = np.random.choice(self.game.num_actions, p=probs)
         row, col = self.game.actions[action]
+        self.ids[f"bt{row}{col}"].background_color = (50 / 255, 164 / 255, 206 / 255, 1)
         self.play(row, col)
 
     def add_stats(self, winner: str):
@@ -112,7 +127,7 @@ class TicTacToeLayout(Widget):
             try:
                 lvl = int(new_name[-1])
             except ValueError:
-                lvl = 0
+                lvl = None
         self.ids[f"player{player_n}"].text = new_name
         self.players_name[int(player_n) - 1] = (
             new_name if new_name != "" else f"player{player_n}"
@@ -124,13 +139,13 @@ class TicTacToeLayout(Widget):
                 f"./back/json_agents/{level}{player}.json"
             )
             self._cpu[player_n - 1] = True
-            if self.game.whose_turn() == player_n - 1:
+            if self.hand == player_n - 1:
                 self.auto_play()
         else:
             self._cpu[player_n - 1] = False
 
-        if not self.game.end:
-            hand = self.players_name[self.game.whose_turn()]
+        if not self.game_over:
+            hand = self.players_name[self.hand]
             self.ids.textup.text = f"{hand}'s turn"
 
     def entered_symbol(self, player_n):
@@ -163,7 +178,7 @@ class TicTacToeLayout(Widget):
         self.ids.textup.text = "Start"
         self.ids.numEmpty.text = ""
         self.ids.numEmpty.background_color = (0, 0, 0, 1)
-        if self._cpu[self.game.whose_turn()]:
+        if self._cpu[self.hand]:
             self.auto_play()
 
 
