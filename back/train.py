@@ -1,4 +1,4 @@
-from q_agent_model import Player
+from player_module import Player
 from tictactoe import TicTacToe
 
 from typing import *
