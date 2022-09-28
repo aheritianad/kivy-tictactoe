@@ -20,7 +20,7 @@ The iterface is not nice. Yeah! but it can do the job.
 
 ## **How to use it?**
 
-First of all, you need to download and install it. It runs on `python3`.
+First of all, you need to download and install its requirement on `python3`.
 
 ### **Installation**
 
