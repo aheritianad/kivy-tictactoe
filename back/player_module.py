@@ -59,7 +59,6 @@ class HumanPlayer(Player):
         print(
             f"{self.name}, it is your turn. You are {('X','+')[self.player_number-1]}."
         )
-        print("state", state)
         available_actions = []
         table = ""
         for action, state_number in zip(range(9), state):
