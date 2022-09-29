@@ -11,7 +11,8 @@ def run_episode(
     player1: Player,
     player2: Player,
     environment: TicTacToe,
-    eval: bool = False,
+    eval1: bool = False,
+    eval2: bool = False,
     max_step: int = 100,
 ):
     """Runing episode between two adgents players.
@@ -20,8 +21,12 @@ def run_episode(
         player1 (Player): first QAgent player
         player2 (Player): second QAgent player
         environment (TicTacToe): the tic tac toe environment where the two agents will play
-        eval (bool, optional): flag saying wether it is an evaluation or a training with update.
-                        If it is an evaluation, then both player will play greedily. Defaults to .
+        eval1 (bool, optional): flag saying wether player1 is in an evaluation or training mode.
+                        If it is an evaluation, then player1 will play greedily, otherwise
+                        epsilon-greedy with update. Defaults to False i.e. training.
+        eval2 (bool, optional): flag saying wether player2 is in an evaluation or training mode.
+                        If it is an evaluation, then player2 will play greedily, otherwise
+                        epsilon-greedy with update. Defaults to False i.e. training.
         max_step (int, optional): maximum step allowed for the episode. Defaults to 100.
 
     Returns:
@@ -32,12 +37,14 @@ def run_episode(
     state = environment.reset()
     n_steps = 0
     players = [player1, player2]
+    evals = (eval1, eval2)
     rewards = [0, 0]
     dones = [False, False]
     done = False
     p = 0
     winners = []
     while True:
+        eval = evals[p]
         if done and isinstance(players[p], HumanPlayer):
             action = 0
         else:
@@ -67,6 +74,8 @@ def train(
     num_episodes: int,
     eval_every_N: int,
     num_eval_episodes: int,
+    eval1: bool = False,
+    eval2: bool = False,
     max_step: int = 100,
 ):
     """Train QAgent player
@@ -78,6 +87,12 @@ def train(
         num_episodes (int): number of episodes to do for the training
         eval_every_N (int): episode period for evaluation
         num_eval_episodes (int): number of episode for each evaluation
+        eval1 (bool, optional): flag saying wether player1 is in an evaluation or training mode.
+                        If it is an evaluation, then player1 will play greedily, otherwise
+                        epsilon-greedy with update. Defaults to False i.e. training.
+        eval2 (bool, optional): flag saying wether player2 is in an evaluation or training mode.
+                        If it is an evaluation, then player2 will play greedily, otherwise
+                        epsilon-greedy with update. Defaults to False i.e. training.
         max_step (int, optional): maximum step allowed for the episode. Defaults to 100
 
     Returns:
@@ -97,7 +112,14 @@ def train(
         for episode in tqdm(range(num_episodes)):
             if there_is_a_human_player:
                 print(f"\n\n---------- Episode : {episode} ----------")
-            run_episode(player1, player2, environment, eval=False, max_step=max_step)
+            run_episode(
+                player1,
+                player2,
+                environment,
+                eval1=eval1,
+                eval2=eval2,
+                max_step=max_step,
+            )
 
             if episode % eval_every_N == 0:
                 if there_is_a_human_player:
@@ -106,7 +128,12 @@ def train(
                 winners_list = [0, 0, 0]
                 for _ in range(num_eval_episodes):
                     rewards, winner = run_episode(
-                        player1, player2, environment, eval=True, max_step=max_step
+                        player1,
+                        player2,
+                        environment,
+                        eval1=True,
+                        eval2=True,
+                        max_step=max_step,
                     )
                     rewards_list.append(rewards)
                     winners_list[winner] += 1
