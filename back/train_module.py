@@ -142,7 +142,7 @@ def visualize_rewards(
     plt.show()
 
 
-def visuzalize_winners(winners, name1=None, name2=None, from_index=0, end_index=-1):
+def visuzalize_winners(winners, num_eval_episodes, name1=None, name2=None, from_index=0, end_index=-1):
     if not name1:
         name1 = "Player 1"
     if not name2:
@@ -154,3 +154,8 @@ def visuzalize_winners(winners, name1=None, name2=None, from_index=0, end_index=
     plt.hist(winners[2][from_index:end_index], label=name2)
     plt.legend()
     plt.show()
+
+    p1, p2 = np.ceil(
+        np.mean(winners[1:, from_index:end_index], axis=-1) * 100 / num_eval_episodes
+    )
+    return f"{100-p1-p2}% is Draw\n{p1}% {name1} wins\n{p2}% {name2} wins"
