@@ -123,14 +123,28 @@ def train(
 
 
 def visualize_rewards(
-    episodes,
-    all_rewards,
-    num_eval_episodes,
-    name1=None,
-    name2=None,
-    from_index=0,
-    end_index=-1,
+    episodes: list,
+    all_rewards: np.ndarray,
+    num_eval_episodes: int,
+    name1: str = None,
+    name2: str = None,
+    from_index: int = 0,
+    end_index: int = -1,
 ):
+    """Reward visualization for the evaluation during training
+
+    Args:
+        episodes (list): list of episode number of traing for evaluation
+        all_rewards (np.ndarray): average reward of both players for each evaluation
+                                    during training
+        num_eval_episodes (int): number of episode for each evaluation
+        name1 (str, optional): name of player 1. Defaults to None. If None is given,
+                                it will be `Player 1`
+        name2 (str, optional): name of player 2. Defaults to None. If None is given,
+                                it will be `Player 2`
+        from_index (int, optional): start index. Defaults to 0.
+        end_index (int, optional): end index. Defaults to -1.
+    """
     if not name1:
         name1 = "Player 1"
     if not name2:
@@ -154,8 +168,29 @@ def visualize_rewards(
 
 
 def visuzalize_winners(
-    winners, num_eval_episodes, name1=None, name2=None, from_index=0, end_index=-1
+    winners: np.ndarray[int],
+    num_eval_episodes: int,
+    name1: str = None,
+    name2: str = None,
+    from_index: int = 0,
+    end_index: int = -1,
 ):
+    """Histogram visualization of number episode time players win for each evaluation
+
+    Args:
+        winners (np.ndarray): `3xn`-array number of time for draw or player 1 or 2 wins for each
+                                evaluation
+        num_eval_episodes (int): number of episode for each evaluation
+        name1 (str, optional): name of player 1. Defaults to None. If None is given,
+                                it will be `Player 1`
+        name2 (str, optional): name of player 2. Defaults to None. If None is given,
+                                it will be `Player 2`
+        from_index (int, optional): start index. Defaults to 0.
+        end_index (int, optional): end index. Defaults to -1.
+
+    Returns:
+        str: percentage of draw and winning time of both players
+    """
     if not name1:
         name1 = "Player 1"
     if not name2:
