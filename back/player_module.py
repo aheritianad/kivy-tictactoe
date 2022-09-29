@@ -74,7 +74,7 @@ class HumanPlayer(Player):
             action = int(input(f"Choose your action {available_actions}:\t").strip())
             if action in available_actions:
                 break
-        print(">", action)
+        print("->", action)
 
         return action
 
@@ -98,22 +98,29 @@ class QAgent(Player):
         self.qfunction = {}
         self._num_actions = num_actions
 
-    def set_learning_params(self, gamma: float, learning_rate: float, epsilon: float):
-        """Setting learning parameters
+    def set_learning_params(
+        self, gamma: float = None, learning_rate: float = None, epsilon: float = None
+    ):
+        """Setting learning parameters.
+        At least one of the parameters is given.
 
         Args:
-            gamma (float): discount factor (between 0 to 1, 1 excluded from theory).
+            gamma (float, optional): discount factor (between 0 to 1, 1 excluded from theory).
                             The higher gamma is, the more the agent look at a bigger horizon.
-            learning_rate (floar): learning rate for update Q-function (from 0 to 1).
+            learning_rate (float, optional): learning rate for update Q-function (from 0 to 1).
                                     The higher learning rate is, the higher exploitation.
-            epsilon (float): probability of acting non greedily (from 0 to 1). The higher epsilon is,
+            epsilon (float, optional): probability of acting non greedily (from 0 to 1). The higher epsilon is,
                             the more the agent explore.
         """
-        self._gamma = gamma
-        self._alpha = learning_rate
-        self._epsilon = epsilon
+        assert gamma or learning_rate or epsilon
+        if gamma is not None:
+            self._gamma = gamma
+        if learning_rate is not None:
+            self._alpha = learning_rate
+        if epsilon is not None:
+            self._epsilon = epsilon
 
-    def act(self, state: str, eval: bool = False):
+    def act(self, state: str, eval: bool = False, policy: dict = None):
         """Sample action at a given state
 
         Args:
@@ -121,12 +128,27 @@ class QAgent(Player):
                             the `qfunction` and the `eval` flag.
             eval (bool, optional): a flag saying wether the sampling should be
                                     done greedily (if `eval` is set to `True`) or epsilon-greedy. Defaults to False.
+            policy (dict, optional): a dictionary policy to use if it is not None. Default to None. If policy is given
+                                    then eval will be ignored. If the given state is not available in the policy, action
+                                    will be choosen uniformly from all allowed move.
 
         Returns:
             int: a sample action at the given state.
         """
+        if policy is not None and isinstance(policy, dict):
+            if state in policy:
+                proba = policy[state]
+            else:
+                proba = return_probabilities(
+                    state, np.zeros(self._num_actions), "random"
+                )
+            action = np.random.choice(np.arange(self._num_actions), p=proba)
+            return action
+
         if state not in self.qfunction:
-            self.qfunction[state] = np.zeros(self._num_actions)
+            self.qfunction[state] = np.array(
+                return_probabilities(state, np.zeros(self._num_actions), "random")
+            )
 
         if eval or np.random.uniform() > self._epsilon:
             action = argmax_uniform(self.qfunction[state])  # grab argmax uniformely
@@ -149,7 +171,9 @@ class QAgent(Player):
             done (bool): falg saying wether the next state is a terminal state or not
         """
         if state not in self.qfunction:
-            self.qfunction[state] = np.zeros(self._num_actions)
+            self.qfunction[state] = np.array(
+                return_probabilities(state, np.zeros(self._num_actions), "random")
+            )
 
         if done:
             self.qfunction[state][action] = (1 - self._alpha) * self.qfunction[state][
@@ -157,7 +181,11 @@ class QAgent(Player):
             ] + self._alpha * reward
         else:
             if next_state not in self.qfunction:
-                self.qfunction[next_state] = np.zeros(self._num_actions)
+                self.qfunction[next_state] = np.array(
+                    return_probabilities(
+                        next_state, np.zeros(self._num_actions), "greedy"
+                    )
+                )
             self.qfunction[state][action] = (1 - self._alpha) * self.qfunction[state][
                 action
             ] + self._alpha * (reward + self._gamma * self.qfunction[next_state].max())
