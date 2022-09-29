@@ -39,8 +39,9 @@ def run_episode(
     winners = []
     while True:
         if done and isinstance(players[p], HumanPlayer):
-            break
-        action = players[p].act(state, eval=eval)
+            action = 0
+        else:
+            action = players[p].act(state, eval=eval)
         next_state, reward, done, switch = environment.step(action)
 
         if not eval:
@@ -85,17 +86,22 @@ def train(
                                             - 2-d array of average number of [draw, player1 wins, player2 wins]
                                             for each evaluation during training
     """
+    there_is_a_human_player = isinstance(player1, HumanPlayer) or isinstance(
+        player2, HumanPlayer
+    )
     all_rewards = []
     episodes = []
     winners = []
     print("\nYou can choose to stop training at any time by interrupting.")
     try:
         for episode in tqdm(range(num_episodes)):
-            if isinstance(player1, HumanPlayer) or isinstance(player2, HumanPlayer):
-                print("Episode :", episode)
+            if there_is_a_human_player:
+                print(f"\n\n---------- Episode : {episode} ----------")
             run_episode(player1, player2, environment, eval=False, max_step=max_step)
 
             if episode % eval_every_N == 0:
+                if there_is_a_human_player:
+                    print("\n-----Running evaluation-----\n")
                 rewards_list = []
                 winners_list = [0, 0, 0]
                 for _ in range(num_eval_episodes):
@@ -162,5 +168,7 @@ def visuzalize_winners(
     plt.legend()
     plt.show()
 
-    draw, p1, p2 = np.mean(winners[:, from_index:end_index], axis=-1) * 100 / num_eval_episodes
+    draw, p1, p2 = (
+        np.mean(winners[:, from_index:end_index], axis=-1) * 100 / num_eval_episodes
+    )
     return f"{draw:.2f}% is Draw\n{p1:.2f}% {name1} wins\n{p2:.2f}% {name2} wins"
