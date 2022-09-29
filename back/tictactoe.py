@@ -64,22 +64,22 @@ class TicTacToe:
             self.color[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if vertical:
             self.color[3 + col] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if diagonal:
             self.color[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         if antidiagonal:
             self.color[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 2
+            reward += 1
         return reward
 
     def play(self, row, col):
@@ -93,7 +93,7 @@ class TicTacToe:
             tuple[bool, int]: indication wether player was able to play at the given position, reward obtain by trying to play on the position
         """
         if self.end:
-            return False, -2  # loose
+            return False, -2 * sum(self.color) - sum(self.color[6:])
         if not self.board[row][col] == 0:
             return False, -1  # penalize on typing on filled slot
 
