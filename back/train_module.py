@@ -226,9 +226,9 @@ def visuzalize_winners(
         name2 = "Player 2"
     plt.figure(figsize=(15, 6))
     plt.title("Histogram of number of time Player's win.")
-    plt.hist(winners[0][from_index:end_index], label="Draw")
     plt.hist(winners[1][from_index:end_index], label=name1)
     plt.hist(winners[2][from_index:end_index], label=name2)
+    plt.hist(winners[0][from_index:end_index], label="Draw")
     plt.legend()
     plt.show()
 
