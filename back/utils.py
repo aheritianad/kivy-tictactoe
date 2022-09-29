@@ -16,6 +16,20 @@ def softmax(logits: np.ndarray):
     return exp_logits / np.sum(exp_logits)
 
 
+def argmax_uniform(qvalue: np.ndarray):
+    """Argmax function where the index will be chosen uniformely if there are more than one max
+
+    Args:
+        qvalue (np.ndarray): a 1-d array argument for the argmax function
+
+    Returns:
+        int: argmax chosen uniformely from all maximum
+    """
+    idx_max = np.arange(qvalue.shape[0])[qvalue == qvalue.max()]
+    return np.random.choice(idx_max)
+
+
+
 def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     """Generate a probability distribution of actions at a given state, knowing the Q-value
 
