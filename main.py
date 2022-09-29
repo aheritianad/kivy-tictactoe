@@ -101,7 +101,6 @@ class TicTacToeLayout(Widget):
         probs = self._policy[self.hand].get(hash, p)
         action = np.random.choice(self.game.num_actions, p=probs)
         row, col = self.game.actions[action]
-        self.ids[f"bt{row}{col}"].background_color = (50 / 255, 164 / 255, 206 / 255, 1)
         self.play(row, col)
 
     def add_stats(self, winner: str):
