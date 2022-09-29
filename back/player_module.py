@@ -71,16 +71,13 @@ class HumanPlayer(Player):
             if action in (2, 5):
                 table += "\n"
         print(table)
-        if available_actions:
-            while True:
-                action = int(
-                    input(f"Choose your action {available_actions}:\t").strip()
-                )
-                if action in available_actions:
-                    break
-            print("You chose action", action)
-        else:
-            action = 0  # board is full
+
+        while True:
+            action = int(input(f"Choose your action {available_actions}:\t").strip())
+            if action in available_actions:
+                break
+        print(">", action)
+
         return action
 
 
