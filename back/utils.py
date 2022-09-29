@@ -29,9 +29,10 @@ def argmax_uniform(qvalue: np.ndarray):
     return np.random.choice(idx_max)
 
 
-
 def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     """Generate a probability distribution of actions at a given state, knowing the Q-value
+
+    If the state is for filled board, action 0 will be given.
 
     Args:
         state (str): current state
@@ -47,7 +48,10 @@ def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     index_state = np.array(list(map(int, list(state))))
     probs = np.zeros_like(qvalue_state, dtype=np.float)
     logits = qvalue_state[index_state == 0]
-    if kind == "greedy":
+    if len(logits) == 0:
+        probs[0] = 1
+        return list(probs)
+    elif kind == "greedy":
         p = np.zeros_like(logits)
         idx_max = np.where(logits - logits.max() == 0)[0]
         p[idx_max] = 1 / len(
