@@ -156,11 +156,13 @@ def visualize_rewards(
     plt.plot(
         episodes[from_index:end_index],
         all_rewards[0][from_index:end_index],
+        "--",
         label=name1,
     )
     plt.plot(
         episodes[from_index:end_index],
         all_rewards[1][from_index:end_index],
+        ":",
         label=name2,
     )
     plt.legend()
