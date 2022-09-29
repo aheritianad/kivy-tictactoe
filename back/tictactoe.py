@@ -64,22 +64,22 @@ class TicTacToe:
             self.color[row] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 1
+            reward += 2
         if vertical:
             self.color[3 + col] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 1
+            reward += 2
         if diagonal:
             self.color[6] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 1
+            reward += 2
         if antidiagonal:
             self.color[7] = self.val
             self.end = True
             self.winner = self.whose_turn()
-            reward += 1
+            reward += 2
         return reward
 
     def play(self, row, col):
