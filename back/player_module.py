@@ -1,7 +1,6 @@
 import numpy as np
 from typing import *
-from utils import return_probabilities, generate_json_policy
-from tictactoe import TicTacToe
+from utils import return_probabilities, generate_json_policy, argmax_uniform
 
 
 class Player:
@@ -128,13 +127,9 @@ class QAgent(Player):
         """
         if state not in self.qfunction:
             self.qfunction[state] = np.zeros(self._num_actions)
-        Q_s = self.qfunction[state]
-        value_are_not_the_same = np.any(Q_s - Q_s[0])
-        if (eval or np.random.uniform() > self._epsilon) and value_are_not_the_same:
-            idx_max = np.arange(self._num_actions)[
-                Q_s == Q_s.max()
-            ]  # find all indices with max value
-            action = np.random.choice(idx_max)  # grab argmax uniformely
+
+        if eval or np.random.uniform() > self._epsilon:
+            action = argmax_uniform(self.qfunction[state])  # grab argmax uniformely
         else:
             action = np.random.randint(self._num_actions)
         return action
