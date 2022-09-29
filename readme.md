@@ -16,7 +16,8 @@ The iterface is not nice. Yeah! but it can do the job.
 ## **Next plan ?**
 
 - [x] ~~My next plan is to implement a reinforcement learning model from scratch to allow cpu to play on its own.~~
-- [ ] It seems that the model plays offensive only. I will train it to play against myself after against itself when I have time for that.
+- [x] ~~It seems that the model plays offensive only. I will train it to play against myself after against itself when I have time for that.~~
+- [ ] Still thinking on what's next...
 
 ## **How to use it?**
 
