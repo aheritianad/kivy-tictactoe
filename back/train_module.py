@@ -1,4 +1,4 @@
-from player_module import Player
+from player_module import Player, HumanPlayer
 from tictactoe import TicTacToe
 
 from typing import *
@@ -11,7 +11,7 @@ def run_episode(
     player1: Player,
     player2: Player,
     environment: TicTacToe,
-    eval: bool,
+    eval: bool = False,
     max_step: int = 100,
 ):
     """Runing episode between two adgents players.
@@ -20,8 +20,8 @@ def run_episode(
         player1 (Player): first QAgent player
         player2 (Player): second QAgent player
         environment (TicTacToe): the tic tac toe environment where the two agents will play
-        eval (bool): flag saying wether it is an evaluation or a training with update.
-                        If it is an evaluation, then both player will play greedily.
+        eval (bool, optional): flag saying wether it is an evaluation or a training with update.
+                        If it is an evaluation, then both player will play greedily. Defaults to .
         max_step (int, optional): maximum step allowed for the episode. Defaults to 100.
 
     Returns:
@@ -34,9 +34,12 @@ def run_episode(
     players = [player1, player2]
     rewards = [0, 0]
     dones = [False, False]
+    done = False
     p = 0
     winners = []
     while True:
+        if done and isinstance(players[p], HumanPlayer):
+            break
         action = players[p].act(state, eval=eval)
         next_state, reward, done, switch = environment.step(action)
 
@@ -88,6 +91,8 @@ def train(
     print("\nYou can choose to stop training at any time by interrupting.")
     try:
         for episode in tqdm(range(num_episodes)):
+            if isinstance(player1, HumanPlayer) or isinstance(player2, HumanPlayer):
+                print("Episode :", episode)
             run_episode(player1, player2, environment, eval=False, max_step=max_step)
 
             if episode % eval_every_N == 0:
@@ -157,7 +162,5 @@ def visuzalize_winners(
     plt.legend()
     plt.show()
 
-    p1, p2 = np.ceil(
-        np.mean(winners[1:, from_index:end_index], axis=-1) * 100 / num_eval_episodes
-    )
-    return f"{100-p1-p2}% is Draw\n{p1}% {name1} wins\n{p2}% {name2} wins"
+    draw, p1, p2 = np.mean(winners[:, from_index:end_index], axis=-1) * 100 / num_eval_episodes
+    return f"{draw:.2f}% is Draw\n{p1:.2f}% {name1} wins\n{p2:.2f}% {name2} wins"
