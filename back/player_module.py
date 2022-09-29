@@ -59,15 +59,29 @@ class HumanPlayer(Player):
         print(
             f"{self.name}, it is your turn. You are {('X','+')[self.player_number-1]}."
         )
+        print("state", state)
+        available_actions = []
         table = ""
-        for action, number in zip(range(9), state):
+        for action, state_number in zip(range(9), state):
+            s_num = int(state_number)
+            if s_num == 0:
+                available_actions.append(action)
             symbols = (str(action), "X", "+")
-            table += symbols[int(number)] + " "
+            table += symbols[s_num] + " "
             if action in (2, 5):
                 table += "\n"
         print(table)
-        action = input("Choose your action :\t")
-        return int(action)
+        if available_actions:
+            while True:
+                action = int(
+                    input(f"Choose your action {available_actions}:\t").strip()
+                )
+                if action in available_actions:
+                    break
+            print("You chose action", action)
+        else:
+            action = 0  # board is full
+        return action
 
 
 class QAgent(Player):
