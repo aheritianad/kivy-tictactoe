@@ -81,7 +81,7 @@ def generate_json(data: dict, json_path: str):
         json.dump(data, json_file, indent=2)
 
 
-def read_json(json_path: str, return_as_array: False):
+def read_json(json_path: str, return_as_array: bool = False):
     """Generate a dictionary from a json file
 
     Args:
