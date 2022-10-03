@@ -6,5 +6,4 @@ bin
 .DS_Store
 .venv
 */*/stats.csv
-*/*/*.json
 .vscode/settings.json
