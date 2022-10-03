@@ -75,3 +75,7 @@ python3 main.py
 > It is important to know that expert will upgrade after each game it plays
 
 - For multiplayer, only avoid  `cpu0`, `cpu1`, `cpu2`, `cpu3` and `train expert` for players' names
+<<<<<<< HEAD
+=======
+
+>>>>>>> d05a268acb1a76b80d6bb5d4d3e474eb933b1190
