@@ -1,6 +1,6 @@
 import numpy as np
 from typing import *
-from utils import return_probabilities, generate_json, argmax_uniform
+from back.utils import return_probabilities, generate_json, argmax_uniform
 
 
 class Player:
