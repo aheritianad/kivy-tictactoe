@@ -70,10 +70,8 @@ python3 main.py
 
 #### Solo vs Multiplayer setups
 
-- For solo, you can choose to either the first player or the second by setting CPU player's name by either `cpu0` for **easy**, `cpu1` for **medium**, `cpu2` for **hard** or `cpu3` for **expert**
+- For solo, you can choose to either the first player or the second by setting CPU player's name by either `cpu0` for **easy**, `cpu1` for **medium**, `cpu2` for **hard** or `cpu3` for **expert**.
+
+> It is important to know that expert will upgrade after each game it plays
 
 - For multiplayer, only avoid  `cpu0`, `cpu1`, `cpu2`, `cpu3` and `train expert` for players' names
-
-#### Upgrade the expert level
-
-Users can train the **expert** level by setting player's name opponent as `train expert`.
