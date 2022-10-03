@@ -67,26 +67,31 @@ def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     return probs.tolist()
 
 
-def generate_json_policy(policy: dict, json_policy_path: str):
+def generate_json(data: dict, json_path: str):
     """Generate a json file of the policy dictionary
 
     Args:
-        policy (dict): a policy of an agent
+        data (dict): a policy/qfunction of an agent
         json_policy_path (str): a path where the json file will be stored
     """
-    with open(json_policy_path, "w") as json_file:
-        json.dump(policy, json_file, indent=2)
+    with open(json_path, "w") as json_file:
+        sample = list(data.values())[0]
+        if isinstance(sample, np.ndarray):
+            data = {state: value.tolist() for state, value in data.items()}
+        json.dump(data, json_file, indent=2)
 
 
-def read_json_policy(json_policy_path: str):
-    """Generate a policy in a dictionary from a json file
+def read_json(json_path: str, return_as_array: False):
+    """Generate a dictionary from a json file
 
     Args:
-        json_policy_path (str): path where the json file is stored
+        json_path (str): path for the json file
 
     Returns:
-        dict[str: list]: a policy dictionary with states (`str`) as keys and action distributions (`list`) as values
+        dict: a dictionary with states (`str`) as keys and action distributions (`list`)/qvalue (`np.ndarray`) as values
     """
-    with open(json_policy_path, "r") as json_file:
-        policy = json.load(json_file)
-    return policy
+    with open(json_path, "r") as json_file:
+        content = json.load(json_file)
+    if return_as_array:
+        content = {state: np.array(val) for state, val in content.items()}
+    return content

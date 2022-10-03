@@ -1,7 +1,6 @@
 import numpy as np
-import json
 from typing import *
-from utils import return_probabilities, generate_json_policy, argmax_uniform
+from utils import return_probabilities, generate_json, argmax_uniform
 
 
 class Player:
@@ -203,9 +202,7 @@ class QAgent(Player):
         Args:
             json_qfunction_path (str): path where json file will be saved
         """
-        dumped = {state: qvalue.tolist() for state, qvalue in self.qfunction.items()}
-        with open(json_qfunction_path, "w") as f:
-            json.dump(dumped, f)
+        generate_json(self.qfunction, json_qfunction_path)
 
     def generate_policy(self, kind: str, json_policy_path: str = None):
         """Generate a policy of an agent from its qfunction.
@@ -226,5 +223,5 @@ class QAgent(Player):
                 state=state, qvalue_state=qvalue, kind=kind
             )
         if json_policy_path is not None:
-            generate_json_policy(policy, json_policy_path)
+            generate_json(policy, json_policy_path)
         return policy
