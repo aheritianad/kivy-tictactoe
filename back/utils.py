@@ -45,12 +45,12 @@ def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     Returns:
         list: the policy distribution at the given state
     """
-    index_state = np.array(list(map(int, list(state))))
+    index_state = np.array([int(char) for char in state])
     probs = np.zeros_like(qvalue_state, dtype=np.float)
     logits = qvalue_state[index_state == 0]
     if len(logits) == 0:
         probs[0] = 1
-        return list(probs)
+        return probs.tolist()
     elif kind == "greedy":
         p = np.zeros_like(logits)
         idx_max = np.where(logits - logits.max() == 0)[0]
@@ -64,7 +64,7 @@ def return_probabilities(state: str, qvalue_state: np.ndarray, kind: str):
     else:
         raise NotImplementedError
     probs[index_state == 0] = p
-    return list(probs)
+    return probs.tolist()
 
 
 def generate_json_policy(policy: dict, json_policy_path: str):
