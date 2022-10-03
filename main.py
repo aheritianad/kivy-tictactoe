@@ -187,10 +187,10 @@ class TicTacToeLayout(Widget):
             and new_name[-1] in "1234"
         ):
             self._cpu[player_n - 1] = True
-            lvl = int(new_name[-1])
+            lvl = new_name[-1]
 
-            if lvl in (1, 2, 3, 4):  # policy
-                level = {1: "easy", 2: "medium", 3: "hard", 4: "expert"}[lvl]
+            if lvl in "0123":  # policy
+                level = {0: "easy", 1: "medium", 2: "hard", 3: "expert"}[int(lvl)]
                 player = "" if level == "easy" else f"_player{player_n}"
                 self._agents[player_n - 1] = read_json(
                     f"./src/policy/{level}{player}.json"
