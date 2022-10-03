@@ -90,20 +90,6 @@ class TicTacToeLayout(Widget):
         if done:
             path_qfunction = f"src/qvalue/qvalue_player{hand+1}.json"
             path_policy = f"src/policy/expert_player{hand+1}.json"
-            if hand == 0:
-                self._agents[hand].qfunction["000000000"] = np.array(
-                    [
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                        0.12487499999999989,
-                    ]
-                )
             self._agents[hand].save_qfunction(path_qfunction)
             self._agents[hand].generate_policy("greedy", path_policy)
 
