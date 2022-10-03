@@ -93,7 +93,7 @@ class TicTacToe:
             tuple[bool, int]: indication wether player was able to play at the given position, reward obtain by trying to play on the position
         """
         if self.end:
-            return False, -2 * sum(self.color) - sum(self.color[6:])
+            return False, -sum(self.color)
         if not self.board[row][col] == 0:
             return False, -1  # penalize on typing on filled slot
 
