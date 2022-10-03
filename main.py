@@ -1,5 +1,6 @@
 from back.tictactoe import TicTacToe
-from back.utils import read_json_policy, return_probabilities
+from back.player_module import QAgent
+from back.utils import read_json, return_probabilities
 
 import numpy as np
 from typing import *
@@ -20,8 +21,8 @@ class TicTacToeLayout(Widget):
         self.ids.textup.text = "Set names (cpu1/cpu2/cpu3 for cpu)"
         self.symbols = ["X", "O"]
         self.players_name = ["player1", "player2"]
-        self._policy = [None, None]
         self._cpu = [False, False]
+        self._agents = [None, None]
 
     @property
     def game_over(self):
@@ -61,6 +62,35 @@ class TicTacToeLayout(Widget):
             for row in range(3):
                 self.ids[f"bt{row}{2-row}"].background_color = color
 
+    def play_update_screen(self, row: int, col: int):
+        """Update screen after playing at a given position
+
+        Args:
+            row (int): row position where current player plays
+            col (int): col position where current player plays
+        """
+        symb = self.symbols[0] if self.hand_index == -1 else self.symbols[1]
+        self.ids[f"bt{row}{col}"].text = symb
+        hand = self.players_name[self.hand]
+        self.ids.textup.text = f"{hand}'s turn"
+
+    def update_empty_label(self):
+        """Update the number of empty label in the screen"""
+        num_empty = self.game.number_of_empty
+        self.ids.numEmpty.text = f"Empty : {num_empty}" if num_empty else "Game over"
+        color = num_empty / 9
+        self.ids.numEmpty.background_color = (color, color, color, 1)
+        self.ids.numEmpty.color = (1 - color, 0, color * (1 - color), 1)
+
+    def update_save_agent(self, state, action, reward, done, hand):
+        next_state = self.game.hashed_state
+        self._agents[hand].update(state, action, next_state, reward, done)
+        if done:
+            path_qfunction = f"src/qvalue/qvalue_player{hand+1}.json"
+            path_policy = f"src/policy/expert_player{hand+1}.json"
+            self._agents[hand].save_qfunction(path_qfunction)
+            self._agents[hand].generate_policy("greedy", path_policy)
+
     def play(self, row: int, col: int):
         """Let current player to play at the given position if the move is allowed.
 
@@ -68,38 +98,46 @@ class TicTacToeLayout(Widget):
             row (int): row where player want to play
             col (int): column where player want to play
         """
-        if self.game.play(row, col)[0]:
-            symb = self.symbols[0] if self.hand_index == -1 else self.symbols[1]
-            self.ids[f"bt{row}{col}"].text = symb
-            hand = self.players_name[self.hand]
-            self.ids.textup.text = f"{hand}'s turn"
+        hand = self.hand
+        state = self.game.hashed_state
+        valid_move, reward = self.game.play(row, col)
+        done = self.game_over
+        action = 3 * row + col
+        if isinstance(self._agents[hand], QAgent):
+            self.update_save_agent(state, action, reward, done, hand)
 
-        num_empty = self.game.number_of_empty
-        self.ids.numEmpty.text = f"Empty : {num_empty}" if num_empty else "Game over"
-        color = num_empty / 9
-        self.ids.numEmpty.background_color = (color, color, color, 1)
-        self.ids.numEmpty.color = (1 - color, 0, color * (1 - color), 1)
+        if valid_move:
+            self.play_update_screen(row, col)
+            self.update_empty_label()
 
-        if self.game_over:
+        if done:
             if self.winner is not None:
                 winner = self.players_name[self.winner]
                 for i, val in enumerate(self.game.color):
                     if not val == 0:
                         self.color_board(i)
+                self.ids.textup.text = f"{winner} wins!"
             else:
                 winner = None
-            self.ids.textup.text = f"{winner} wins!" if winner is not None else "Draw!"
+                self.ids.textup.text = "Draw!"
 
             # self.add_stats(winner=winner)
-        if self._cpu[self.hand] and not self.game_over:
+        elif self._cpu[self.hand]:
             self.auto_play()
 
     def auto_play(self):
-        """Ask cpu to play following its corresponding policy"""
-        hash = self.game.hashed_state
-        p = return_probabilities(hash, np.zeros(self.game.num_actions), kind="random")
-        probs = self._policy[self.hand].get(hash, p)
-        action = np.random.choice(self.game.num_actions, p=probs)
+        """Ask cpu agent to play"""
+
+        state = self.game.hashed_state
+        player = self._agents[self.hand]
+        if isinstance(player, dict):  # policy
+            p = return_probabilities(
+                state, np.zeros(self.game.num_actions), kind="random"
+            )
+            probs = player.get(state, p)
+            action = np.random.choice(self.game.num_actions, p=probs)
+        else:  # Qagent
+            action = player.act(state=state, eval=True)
         row, col = self.game.actions[action]
         self.play(row, col)
 
@@ -120,24 +158,44 @@ class TicTacToeLayout(Widget):
             player_n (int): index (1 or 2) of player
         """
         max_name_length = 20
-        new_name = self.ids[f"player{player_n}"].text[:max_name_length].replace(" ", "")
-        name = new_name[:-1].lower()
-        if name == "cpu":
-            try:
-                lvl = int(new_name[-1])
-            except ValueError:
-                lvl = None
+        new_name = self.ids[f"player{player_n}"].text.strip()[:max_name_length]
+
         self.ids[f"player{player_n}"].text = new_name
-        self.players_name[int(player_n) - 1] = (
-            new_name if new_name != "" else f"player{player_n}"
-        )
-        if name == "cpu" and lvl in (1, 2, 3):
-            level = {1: "easy", 2: "medium", 3: "hard"}[lvl]
-            player = "" if level == "easy" else f"_player{player_n}"
-            self._policy[player_n - 1] = read_json_policy(
-                f"./back/json_agents/{level}{player}.json"
-            )
+        if new_name:
+            self.players_name[int(player_n) - 1] = new_name
+        else:
+            self.players_name[int(player_n) - 1] = f"player{player_n}"
+
+        if new_name == "train expert":
             self._cpu[player_n - 1] = True
+            qfunction = read_json(
+                f"./src/qvalue/qvalue_player{player_n}.json", return_as_array=True
+            )
+            self._agents[player_n - 1] = QAgent(
+                num_actions=9,
+                gamma=0.999,
+                learning_rate=0.01,
+                epsilon=1,
+                qfunction=qfunction,
+            )
+            if self.hand == player_n - 1:
+                self.auto_play()
+
+        elif (
+            "cpu" == new_name[:3].lower()
+            and len(new_name) == 4
+            and new_name[-1] in "1234"
+        ):
+            self._cpu[player_n - 1] = True
+            lvl = int(new_name[-1])
+
+            if lvl in (1, 2, 3, 4):  # policy
+                level = {1: "easy", 2: "medium", 3: "hard", 4: "expert"}[lvl]
+                player = "" if level == "easy" else f"_player{player_n}"
+                self._agents[player_n - 1] = read_json(
+                    f"./src/policy/{level}{player}.json"
+                )
+
             if self.hand == player_n - 1:
                 self.auto_play()
         else:
