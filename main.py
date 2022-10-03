@@ -77,8 +77,10 @@ class TicTacToeLayout(Widget):
     def update_empty_label(self):
         """Update the number of empty label in the screen"""
         num_empty = self.game.number_of_empty
-        self.ids.numEmpty.text = f"Empty : {num_empty}" if num_empty else "Game over"
-        color = num_empty / 9
+        self.ids.numEmpty.text = (
+            f"Empty : {num_empty}" if num_empty and not self.game_over else "Game over"
+        )
+        color = num_empty / 9 if not self.game_over else 0
         self.ids.numEmpty.background_color = (color, color, color, 1)
         self.ids.numEmpty.color = (1 - color, 0, color * (1 - color), 1)
 
