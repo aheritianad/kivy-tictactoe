@@ -174,7 +174,7 @@ class TicTacToeLayout(Widget):
             self._agents[player_n - 1] = QAgent(
                 num_actions=9,
                 gamma=0.999,
-                learning_rate=0.01,
+                learning_rate=0.9,
                 epsilon=1,
                 qfunction=qfunction,
             )
