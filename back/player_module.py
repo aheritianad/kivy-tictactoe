@@ -1,4 +1,5 @@
 import numpy as np
+import json
 from typing import *
 from utils import return_probabilities, generate_json_policy, argmax_uniform
 
@@ -81,7 +82,12 @@ class HumanPlayer(Player):
 
 class QAgent(Player):
     def __init__(
-        self, num_actions: int, gamma: float, learning_rate: float, epsilon: float
+        self,
+        num_actions: int,
+        gamma: float,
+        learning_rate: float,
+        epsilon: float,
+        qfunction: dict = None,
     ) -> None:
         """A free tabular Q-agent class for Tic Tac Toe player
 
@@ -93,9 +99,10 @@ class QAgent(Player):
                                     The higher learning rate is, the higher exploitation.
             epsilon (float): probability of acting non greedily (from 0 to 1). The higher epsilon is,
                             the more the agent explore.
+            qfunction (dict): Q-value function of each state at each action. Default to None.
         """
         self.set_learning_params(gamma, learning_rate, epsilon)
-        self.qfunction = {}
+        self.qfunction = qfunction if qfunction is not None else {}
         self._num_actions = num_actions
 
     def set_learning_params(
@@ -190,6 +197,16 @@ class QAgent(Player):
                 action
             ] + self._alpha * (reward + self._gamma * self.qfunction[next_state].max())
 
+    def save_qfunction(self, json_qfunction_path: str):
+        """Save Q function in a json file
+
+        Args:
+            json_qfunction_path (str): path where json file will be saved
+        """
+        dumped = {state: qvalue.tolist() for state, qvalue in self.qfunction.items()}
+        with open(json_qfunction_path, "w") as f:
+            json.dump(dumped, f)
+
     def generate_policy(self, kind: str, json_policy_path: str = None):
         """Generate a policy of an agent from its qfunction.
 
@@ -205,10 +222,9 @@ class QAgent(Player):
         """
         policy = {}
         for state, qvalue in self.qfunction.items():
-            if "0" in state:  # only consider the case that there is an empty slot
-                policy[state] = return_probabilities(
-                    state=state, qvalue_state=qvalue, kind=kind
-                )
+            policy[state] = return_probabilities(
+                state=state, qvalue_state=qvalue, kind=kind
+            )
         if json_policy_path is not None:
             generate_json_policy(policy, json_policy_path)
         return policy
