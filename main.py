@@ -166,31 +166,29 @@ class TicTacToeLayout(Widget):
         else:
             self.players_name[int(player_n) - 1] = f"player{player_n}"
 
-        if new_name == "train expert":
-            self._cpu[player_n - 1] = True
-            qfunction = read_json(
-                f"./src/qvalue/qvalue_player{player_n}.json", return_as_array=True
-            )
-            self._agents[player_n - 1] = QAgent(
-                num_actions=9,
-                gamma=0.999,
-                learning_rate=0.9,
-                epsilon=1,
-                qfunction=qfunction,
-            )
-            if self.hand == player_n - 1:
-                self.auto_play()
-
-        elif (
+        if (
             "cpu" == new_name[:3].lower()
             and len(new_name) == 4
-            and new_name[-1] in "1234"
+            and new_name[-1] in "0123"
         ):
             self._cpu[player_n - 1] = True
             lvl = new_name[-1]
 
-            if lvl in "0123":  # policy
-                level = {0: "easy", 1: "medium", 2: "hard", 3: "expert"}[int(lvl)]
+            if lvl == "3":
+                self._cpu[player_n - 1] = True
+                qfunction = read_json(
+                    f"./src/qvalue/qvalue_player{player_n}.json", return_as_array=True
+                )
+                self._agents[player_n - 1] = QAgent(
+                    num_actions=9,
+                    gamma=0.999,
+                    learning_rate=0.9,
+                    epsilon=1,
+                    qfunction=qfunction,
+                )
+
+            elif lvl in "012":  # policy
+                level = {0: "easy", 1: "medium", 2: "hard"}[int(lvl)]
                 player = "" if level == "easy" else f"_player{player_n}"
                 self._agents[player_n - 1] = read_json(
                     f"./src/policy/{level}{player}.json"
