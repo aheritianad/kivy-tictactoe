@@ -37,7 +37,7 @@ class TicTacToe:
         """
         return 0 if self.val == 1 else 1
 
-    def get_reward(self, row, col):
+    def get_reward(self, row:int, col:int):
         """Check wether the game is ended if current player play at the given position and return the respected reward.
 
         Args:
@@ -82,7 +82,7 @@ class TicTacToe:
             reward += 1
         return reward
 
-    def play(self, row, col):
+    def play(self, row:int, col:int):
         """Current player plays at the given row and column.
 
         Args:
@@ -129,7 +129,7 @@ class TicTacToe:
         self.winner = None
         return self.hashed_state
 
-    def step(self, action):
+    def step(self, action:int):
         """Make a step in the environement by performing an action.
         Actions are represented in a index form (from 0 to 8), where
         row 0, col 0 : action 0

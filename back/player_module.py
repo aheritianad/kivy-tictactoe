@@ -1,10 +1,7 @@
 import numpy as np
 from typing import *
 
-try:
-    from back.utils import return_probabilities, generate_json, argmax_uniform
-except ModuleNotFoundError:
-    from utils import return_probabilities, generate_json, argmax_uniform
+from back.utils import return_probabilities, generate_json, argmax_uniform
 
 
 class Player:

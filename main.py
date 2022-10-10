@@ -93,6 +93,17 @@ class TicTacToeLayout(Widget):
             self._agents[hand].save_qfunction(path_qfunction)
             self._agents[hand].generate_policy("greedy", path_policy)
 
+    def print_result(self):
+        if self.winner is not None:
+            winner = self.players_name[self.winner]
+            for i, val in enumerate(self.game.color):
+                if not val == 0:
+                    self.color_board(i)
+            self.ids.textup.text = f"{winner} wins!"
+        else:
+            winner = None
+            self.ids.textup.text = "Draw!"
+
     def play(self, row: int, col: int):
         """Let current player to play at the given position if the move is allowed.
 
@@ -113,17 +124,9 @@ class TicTacToeLayout(Widget):
             self.update_empty_label()
 
         if done:
-            if self.winner is not None:
-                winner = self.players_name[self.winner]
-                for i, val in enumerate(self.game.color):
-                    if not val == 0:
-                        self.color_board(i)
-                self.ids.textup.text = f"{winner} wins!"
-            else:
-                winner = None
-                self.ids.textup.text = "Draw!"
-
+            self.print_result()
             # self.add_stats(winner=winner)
+
         elif self._cpu[self.hand]:
             self.auto_play()
 
@@ -164,9 +167,9 @@ class TicTacToeLayout(Widget):
 
         self.ids[f"player{player_n}"].text = new_name
         if new_name:
-            self.players_name[int(player_n) - 1] = new_name
+            self.players_name[player_n - 1] = new_name
         else:
-            self.players_name[int(player_n) - 1] = f"player{player_n}"
+            self.players_name[player_n - 1] = f"player{player_n}"
 
         if (
             "cpu" == new_name[:3].lower()

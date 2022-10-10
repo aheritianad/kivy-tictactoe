@@ -1,5 +1,5 @@
-from player_module import Player, HumanPlayer
-from tictactoe import TicTacToe
+from back.player_module import Player, HumanPlayer
+from back.tictactoe import TicTacToe
 
 from typing import *
 import numpy as np
