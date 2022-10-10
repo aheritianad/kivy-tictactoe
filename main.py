@@ -8,6 +8,8 @@ from typing import *
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+
 
 Builder.load_file("./front/main.kv")
 
@@ -128,7 +130,7 @@ class TicTacToeLayout(Widget):
             # self.add_stats(winner=winner)
 
         elif self._cpu[self.hand]:
-            self.auto_play()
+            Clock.schedule_once(lambda dt: self.auto_play(), 0.5)
 
     def auto_play(self):
         """Ask cpu agent to play"""
